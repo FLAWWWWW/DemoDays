@@ -1,1 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  background-color: #111227 !important; /*Важное самое*/
+  margin: 0;
+  padding: 0;
+  color: white;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header-bg{
+  background-color: #03abe3;
+  width:100%;
+}
+
+.main-footer{
+  background-color: #6b6b99;
+  color: white;
+  margin-top: auto;
+}
+
+.btn:focus, btn:active {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+main{
+  min-length: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 50px;
+}

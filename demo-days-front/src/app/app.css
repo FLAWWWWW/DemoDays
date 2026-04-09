@@ -1,0 +1,84 @@
+/* Основные цвета макета */
+:host {
+  --main-blue: #00aeef;
+  --dark-bg: #1a1a2e;
+  --card-dark: #25254d;
+  --accent-pink: #e91e63;
+  --footer-purple: #6b6b99;
+}
+
+/* Навбар-капсула */
+.navbar-custom {
+  background-color: var(--main-blue);
+  border-radius: 8px;
+  padding: 10px 30px;
+}
+
+/* Кнопка переключения языка */
+.lang-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.lang-btn:focus, .lang-btn:active {
+  box-shadow: none !important;
+}
+
+/* Карточка события */
+.event-card {
+  background-color: var(--card-dark);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.visit-btn {
+  background-color: var(--accent-pink);
+  color: white;
+  border: none;
+  padding: 8px 25px;
+  border-radius: 4px;
+  float: right;
+}
+body {
+  background-color: #111227 !important; /* Тот самый темно-синий/черный */
+  margin: 0;
+  padding: 0;
+}
+/* Индикаторы карусели */
+.custom-indicators [button] {
+  width: 40px;
+  height: 6px;
+  background-color: var(--main-blue);
+  border: none;
+  margin: 0 5px;
+}
+
+.custom-indicators .active {
+  background-color: var(--accent-pink);
+}
+
+
+::ng-deep .dropdown-menu {
+  min-width: 80px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 4px !important;
+  overflow: hidden;
+}
+
+
+::ng-deep .dropdown-item {
+  color: #00aeef !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  padding: 8px 0 !important;
+  transition: all 0.2s ease;
+}
+
+::ng-deep .dropdown-item:hover {
+  background-color: #00aeef !important;
+  color: white !important;
+  cursor: pointer;
+}
