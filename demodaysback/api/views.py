@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from .models import Event, Project
-from .serializers import EventSerializer, ProjectSerializer
+from .models import Event, Project, Feedback
+from .serializers import EventSerializer, ProjectSerializer, FeedbackSerializer
 
 @api_view(['GET', 'POST'])
 def event_list(request):
