@@ -1,0 +1,54 @@
+.event-description{
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::ng-deep .carousel-control-prev-icon,
+::ng-deep .carousel-control-next-icon {
+  display: none !important;
+}
+
+::ng-deep .carousel-control-prev,
+::ng-deep .carousel-control-next {
+  width: 8%;
+  background: none;
+  border: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+::ng-deep .carousel-control-next:hover {
+  opacity: 0.1;
+  background: linear-gradient(to left, rgba(255,255,255,0.5), transparent);
+  cursor: pointer;
+}
+
+::ng-deep .carousel-control-prev:hover {
+  opacity: 0.1;
+  background: linear-gradient(to right, rgba(255,255,255,0.5), transparent);
+  cursor: pointer;
+}
+.dev-card {
+  border-radius: 15px;
+  overflow: hidden;
+  height: 450px;
+}
+
+.dev-photo {
+  height: 65%;
+}
+
+.dev-info {
+  height: 35%;
+}
+
+:host {
+  scroll-behavior: smooth;
+}
+
+.section-divider{
+    border: 5px, solid, #22244b;
+}
