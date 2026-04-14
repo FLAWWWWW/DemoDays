@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import Event, Project, Feedback
-from .serializers import EventSerializer, ProjectSerializer, FeedbackSerializer
+from .serializers import EventSerializer, ProjectSerializer, FeedbackSerializer, RegisterSerializer, EmailReceiverSerializer
 
 @api_view(['GET', 'POST'])
 def event_list(request):
@@ -29,6 +29,14 @@ def event_detail(request, pk):
     serializer = EventSerializer(event)
     return Response(serializer.data)
 
+#вьюшка принимающая только POST запросы для имейлов
+@api_view(['POST'])
+def collect_email(request):
+    serializer = EmailReceiverSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Email collected!"}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class ProjectList(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -40,7 +48,7 @@ class ProjectList(APIView):
     def post(self,request):
         serializer = ProjectSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(developer=request.user)
+            serializer.save(developer=request.owner)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -76,3 +84,12 @@ class ProjectDetail(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         project.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class RegisterView(APIView):
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    

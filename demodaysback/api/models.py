@@ -5,6 +5,7 @@ class Profile(models.Model):
     ROLE_CHOICES = [
         ('GUEST', 'Guest'),
         ('SPEAKER', 'Speaker'),
+        ('DEVELOPER', 'Developer'),
     ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -29,7 +30,7 @@ class Event(models.Model):
 class Project(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='projects')
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.CharField(max_length=255) 
@@ -45,3 +46,9 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f"Feedback for {self.project.title} by {self.author.username}"
+    
+class EmailReceiver(models.Model):
+    email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.email

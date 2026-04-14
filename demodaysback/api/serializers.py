@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import Event, Project, Profile, Feedback
+from .models import Event, Project, Profile, Feedback, EmailReceiver
 from django.contrib.auth.models import User
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['role', 'bio', 'phone']
+        fields = ['id', 'role', 'bio', 'phone']
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
@@ -21,7 +21,6 @@ class EventSerializer(serializers.Serializer):
     description = serializers.CharField()
     location = serializers.CharField(max_length=255)
     image = serializers.CharField(max_length=255)
-
     def create(self, validated_data):
         return Event.objects.create(**validated_data)
 
@@ -56,3 +55,26 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id', 'title', 'description', 'owner', 'event', 'created_at']
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    role = serializers.ChoiceField(choices=Profile.ROLE_CHOICES, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'email', 'role']
+
+    def create(self, validated_data):
+        role = validated_data.pop('role', 'GUEST')
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            password=validated_data['password']
+        )
+        Profile.objects.create(user=user, role=role)
+        return user
+
+class EmailReceiverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailReceiver
+        fields = ['email']
