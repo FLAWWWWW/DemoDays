@@ -16,5 +16,5 @@ urlpatterns = [
     path('projects/', views.ProjectList.as_view(), name='project-list'),
     path('projects/<int:pk>/', views.ProjectDetail.as_view(), name='project-detail'),
 
-    path('subscribe/', views.collect_email, name='subscribe')
+    path('emails/', views.collect_email, name='email-receive')
 ]
