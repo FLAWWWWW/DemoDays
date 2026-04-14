@@ -20,6 +20,7 @@ class EventSerializer(serializers.Serializer):
     date = serializers.DateField()
     description = serializers.CharField()
     location = serializers.CharField(max_length=255)
+    image = serializers.CharField(max_length=255)
 
     def create(self, validated_data):
         return Event.objects.create(**validated_data)
@@ -27,7 +28,7 @@ class EventSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
         instance.date = validated_data.get('date', instance.date)
-        instance.description = validated_data.get('desciprition', instance.description)
+        instance.description = validated_data.get('description', instance.description)
         instance.location = validated_data.get('location', instance.location)
         instance.save()
         return instance
