@@ -152,9 +152,13 @@
           We select the week's key events and then share them in an engaging way in our newsletter.
         </p>
         <div class="input-group mt-2">
-          <input type="email" class="form-control border-0" placeholder="E-mail" style="background: #e0e0e0;">
-          <button class="btn text-white px-4" style="background-color: #5a00b3;">Send</button>
+          <input [formControl]="email" type="email" class="form-control border-0" 
+                placeholder="E-mail" style="background: #e0e0e0;">
+          <button (click)="onSubmit()" [disabled]="email.invalid"
+                  class="btn text-white px-4" style="background-color: #5a00b3;">Send</button>
         </div>
+        <p *ngIf="submitted" style="color: #e0e0e0;" class="mt-2 fw-bold">Email sended</p>
+        <p *ngIf="errorMessage" style="color: #e91e63;" class="mt-2 fw-bold">{{ errorMessage }}</p>
       </div>
     </div>
   </div>
