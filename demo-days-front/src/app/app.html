@@ -100,13 +100,11 @@
 
 <div class="header-bg sticky-top" style="z-index: 1020;">
   <header class="container">
-    <nav class="navbar navbar-expan-lg py-2">
+    <nav class="navbar navbar-expand-lg py-2">
       <div class="container-fluid">
-        <div class = "navbar-nav me-auto d-flex flex-row gap-4">
-
-          <a class="nav-link text-white fw-bold" href = "#">Events</a>
-
-          <a class="nav-link text-white fw-bold" href = "#">About</a>
+        <div class="navbar-nav me-auto d-flex flex-row gap-4">
+          <a class="nav-link text-white fw-bold" href="event">Events</a>
+          <a class="nav-link text-white fw-bold" href="about">About</a>
         </div>
 
         <div class="d-flex align-items-center text-white">
@@ -119,8 +117,11 @@
               <li><a class="dropdown-item" href="#">Eng</a></li>
             </ul>
           </div>
-          <app-header></app-header>
-          <!--вот тута был <router-outlet> но он чет мешает пока-->
+
+          <button (click)="openAuthModal(authModal)" class="btn btn-outline-light fw-bold ms-3 px-4" style="border-radius: 20px;">
+            Sign In
+          </button>
+
           <i class="bi bi-person-circle fs-2 ms-3"></i>
         </div>
       </div>
@@ -145,8 +146,8 @@
       </div>
       <div class="col-md-3">
         <h5>DemoDay</h5>
-        <p class="mb-1 opacity-75">About</p>
-        <p class="opacity-75">Contacts</p>
+        <p class="mb-1 opacity-75" style="cursor: pointer;">About</p>
+        <p class="opacity-75" style="cursor: pointer;">Contacts</p>
       </div>
       <div class="col-md-6">
         <h5>Newsletter</h5>
@@ -154,14 +155,93 @@
           We select the week's key events and then share them in an engaging way in our newsletter.
         </p>
         <div class="input-group mt-2">
-          <input [formControl]="email" type="email" class="form-control border-0" 
-                placeholder="E-mail" style="background: #e0e0e0;">
-          <button (click)="onSubmit()" [disabled]="email.invalid"
+          <input [formControl]="authForm.controls.email" type="email" class="form-control border-0"
+                 placeholder="E-mail" style="background: #e0e0e0;">
+          <button (click)="onSubmit()" [disabled]="authForm.controls.email.invalid"
                   class="btn text-white px-4" style="background-color: #5a00b3;">Send</button>
         </div>
-        <p *ngIf="submitted" style="color: #e0e0e0;" class="mt-2 fw-bold">Email sended</p>
+        <p *ngIf="submitted" style="color: #4caf50;" class="mt-2 fw-bold">Email sent successfully!</p>
         <p *ngIf="errorMessage" style="color: #e91e63;" class="mt-2 fw-bold">{{ errorMessage }}</p>
       </div>
     </div>
   </div>
 </footer>
+
+<ng-template #authModal let-modal>
+  <div class="modal-body p-0"> <div class="d-flex w-100 mb-4" style="background-color: #f0f0f0; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+    <button type="button"
+            class="btn py-3 w-50 fw-bold border-0"
+            [style.background-color]="!isLoginMode ? 'transparent' : '#ccc'"
+            (click)="toggleMode(false)"
+            style="border-radius: 0;">
+      Registration
+    </button>
+    <button type="button"
+            class="btn py-3 w-50 fw-bold border-0"
+            [style.background-color]="isLoginMode ? 'transparent' : '#ccc'"
+            (click)="toggleMode(true)"
+            style="border-radius: 0;">
+      Login
+    </button>
+  </div>
+
+    <div class="p-4 pt-0">
+      <form [formGroup]="authForm">
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">E-mail</label>
+          <input type="email" formControlName="email" class="form-control bg-light border-0" placeholder="Enter your email">
+        </div>
+
+        <div *ngIf="!isLoginMode" class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Name</label>
+            <input type="text" formControlName="name" class="form-control bg-light border-0" placeholder="Name">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Surname</label>
+            <input type="text" formControlName="surname" class="form-control bg-light border-0" placeholder="Surname">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Password</label>
+          <input type="password" formControlName="password" class="form-control bg-light border-0" placeholder="Password">
+        </div>
+
+        <div *ngIf="!isLoginMode" class="mb-3">
+          <label class="form-label fw-bold">Confirm Password</label>
+          <input type="password" formControlName="confirmPassword" class="form-control bg-light border-0" placeholder="Repeat password">
+        </div>
+
+        <div *ngIf="!isLoginMode" class="mb-4">
+          <label class="form-label fw-bold d-block">Role</label>
+          <div class="btn-group w-100">
+            <button type="button" (click)="selectRole('Guest')"
+                    [class.btn-primary]="selectedRole === 'Guest'"
+                    [class.btn-outline-primary]="selectedRole !== 'Guest'"
+                    class="btn border-1">Guest</button>
+            <button type="button" (click)="selectRole('Speaker')"
+                    [class.btn-primary]="selectedRole === 'Speaker'"
+                    [class.btn-outline-primary]="selectedRole !== 'Speaker'"
+                    class="btn border-1">Speaker</button>
+            <button type="button" (click)="selectRole('Development')"
+                    [class.btn-primary]="selectedRole === 'Development'"
+                    [class.btn-outline-primary]="selectedRole !== 'Development'"
+                    class="btn border-1">Development</button>
+          </div>
+        </div>
+
+        <button (click)="onSubmit()" class="btn w-100 text-white fw-bold py-2"
+                style="background-color: #5a00b3; border-radius: 8px;">
+          {{ isLoginMode ? 'Login' : 'Register Now' }}
+        </button>
+
+        <p *ngIf="errorMessage" class="text-danger text-center mt-3 fw-bold small">{{ errorMessage }}</p>
+        <p *ngIf="submitted" class="text-success text-center mt-3 fw-bold small">
+          {{ isLoginMode ? 'Welcome back!' : 'Success! Welcome aboard.' }}
+        </p>
+      </form>
+    </div>
+  </div>
+</ng-template>
