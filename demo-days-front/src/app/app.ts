@@ -19,6 +19,7 @@ export class App {
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
+  // Событие для кнопки Submit, выводит ошибку или показывает пользователю, что всё хорошо и имейл отправился
   onSubmit() {
     this.errorMessage = '';
     this.submitted = false;
