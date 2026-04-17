@@ -4,11 +4,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-
+import { Header } from './header/header';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgbModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterOutlet, NgbModule, ReactiveFormsModule, CommonModule, Header],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
