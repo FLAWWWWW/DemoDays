@@ -1,0 +1,8 @@
+<div class="auth-section">
+    <button *ngIf="!isLoggedIn" routerLink="/login" class="btn-signin">
+        Sign In
+    </button>
+    <div *ngIf="isLoggedIn" class="user-profile">
+        <img src="assets/default-avatar.png" alt="Avatar" class="avatar-icon" (click)="logout()">
+        <button (click)="logout()">Logout</button>
+</div>
