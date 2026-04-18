@@ -20,17 +20,41 @@ export class App {
   isLoginMode: boolean = false;
   // Создаем группу полей для регистрации
   authForm = new FormGroup({
+    username: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    confirmPassword: new FormControl('', [Validators.required])
+    confirmPassword: new FormControl('', [Validators.required]),
+    name: new FormControl(''),        // ← добавить
+    surname: new FormControl('')      // ← добавить
   });
 
   toggleMode(mode: boolean) {
     this.isLoginMode = mode;
     this.errorMessage = '';
     this.submitted = false;
-    // Можно также сбрасывать форму при переключении
     this.authForm.reset();
+
+    const usernameControl = this.authForm.get('username');
+    const nameControl = this.authForm.get('name');
+    const surnameControl = this.authForm.get('surname');
+    const confirmControl = this.authForm.get('confirmPassword');
+
+    if (mode) { // Login mode
+      usernameControl?.setValidators([Validators.required]);
+      nameControl?.clearValidators();
+      surnameControl?.clearValidators();
+      confirmControl?.clearValidators();
+    } else { // Register mode
+      usernameControl?.setValidators([Validators.required]);
+      nameControl?.setValidators([Validators.required]);
+      surnameControl?.setValidators([Validators.required]);
+      confirmControl?.setValidators([Validators.required]);
+    }
+
+    usernameControl?.updateValueAndValidity();
+    nameControl?.updateValueAndValidity();
+    surnameControl?.updateValueAndValidity();
+    confirmControl?.updateValueAndValidity();
   }
   selectedRole: string = 'Guest';
   submitted = false;
@@ -54,34 +78,59 @@ export class App {
     this.submitted = false;
 
     if (this.authForm.valid) {
-      // Проверка совпадения паролей перед отправкой
-      if (this.authForm.value.password !== this.authForm.value.confirmPassword) {
-        this.errorMessage = 'Passwords do not match.';
-        return;
-      }
-
-      const payload = {
-        email: this.authForm.value.email,
-        password: this.authForm.value.password,
-        role: this.selectedRole
-      };
-
-      this.http.post('http://127.0.0.1:8000/api/subscribe/', payload).subscribe({
-        next: () => {
-          this.submitted = true;
-          this.authForm.reset();
-          this.cdr.detectChanges();
-
-          // Закрываем модалку автоматически через 2 секунды после успеха
-          setTimeout(() => this.modalService.dismissAll(), 2000);
-        },
-        error: (err) => {
-          this.errorMessage = err.status === 400
-            ? 'This email is already registered.'
-            : 'Server error. Please try again later.';
-          this.cdr.detectChanges();
+      if (!this.isLoginMode) {
+        // Register mode
+        if (this.authForm.value.password !== this.authForm.value.confirmPassword) {
+          this.errorMessage = 'Passwords do not match.';
+          return;
         }
-      });
+
+        const payload = {
+          username: this.authForm.value.username,
+          email: this.authForm.value.email,
+          password: this.authForm.value.password,
+          role: this.selectedRole
+        };
+
+        this.http.post('http://127.0.0.1:8000/api/register/', payload).subscribe({
+          next: (response: any) => {
+            this.submitted = true;
+            this.authForm.reset();
+            this.cdr.detectChanges();
+            // Закрываем модалку автоматически через 2 секунды после успеха
+            setTimeout(() => this.modalService.dismissAll(), 2000);
+          },
+          error: (err) => {
+            this.errorMessage = err.error?.message || 'Registration failed.';
+            this.cdr.detectChanges();
+          }
+        });
+      } else {
+        // Login mode
+        const payload = {
+          username: this.authForm.value.username,
+          password: this.authForm.value.password
+        };
+
+        this.http.post('http://127.0.0.1:8000/api/login/', payload).subscribe({
+          next: (response: any) => {
+            localStorage.setItem('access_token', response.access);
+            localStorage.setItem('refresh_token', response.refresh);
+            this.submitted = true;
+            this.authForm.reset();
+            this.cdr.detectChanges();
+            // Закрываем модалку и обновляем статус
+            setTimeout(() => {
+              this.modalService.dismissAll();
+              // Возможно, уведомить header об изменении статуса
+            }, 2000);
+          },
+          error: (err) => {
+            this.errorMessage = 'Invalid credentials.';
+            this.cdr.detectChanges();
+          }
+        });
+      }
     } else {
       this.errorMessage = 'Please fill out the form correctly.';
     }
