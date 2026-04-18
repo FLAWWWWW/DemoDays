@@ -187,7 +187,6 @@
 
     <div class="p-4 pt-0">
       <form [formGroup]="authForm">
-
         <div class="mb-3">
           <label class="form-label fw-bold">E-mail</label>
           <input type="email" formControlName="email" class="form-control bg-light border-0" placeholder="Enter your email">
@@ -196,11 +195,11 @@
         <div *ngIf="!isLoginMode" class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label fw-bold">Name</label>
-            <input type="text" formControlName="name" class="form-control bg-light border-0" placeholder="Name">
+            <input type="text" formControlName="first_name" class="form-control bg-light border-0" placeholder="Name">
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label fw-bold">Surname</label>
-            <input type="text" formControlName="surname" class="form-control bg-light border-0" placeholder="Surname">
+            <input type="text" formControlName="last_name" class="form-control bg-light border-0" placeholder="Surname">
           </div>
         </div>
 
@@ -211,24 +210,26 @@
 
         <div *ngIf="!isLoginMode" class="mb-3">
           <label class="form-label fw-bold">Confirm Password</label>
-          <input type="password" formControlName="confirmPassword" class="form-control bg-light border-0" placeholder="Repeat password">
+          <input type="password" formControlName="password_confirm" class="form-control bg-light border-0" placeholder="Repeat password">
         </div>
 
         <div *ngIf="!isLoginMode" class="mb-4">
           <label class="form-label fw-bold d-block">Role</label>
           <div class="btn-group w-100">
-            <button type="button" (click)="selectRole('Guest')"
-                    [class.btn-primary]="selectedRole === 'Guest'"
-                    [class.btn-outline-primary]="selectedRole !== 'Guest'"
+            <button type="button" (click)="authForm.patchValue({role: 'Guest'})"
+                    [class.btn-primary]="authForm.value.role === 'Guest'"
+                    [class.btn-outline-primary]="authForm.value.role !== 'Guest'"
                     class="btn border-1">Guest</button>
-            <button type="button" (click)="selectRole('Speaker')"
-                    [class.btn-primary]="selectedRole === 'Speaker'"
-                    [class.btn-outline-primary]="selectedRole !== 'Speaker'"
+      
+            <button type="button" (click)="authForm.patchValue({role: 'Speaker'})"
+                    [class.btn-primary]="authForm.value.role === 'Speaker'"
+                    [class.btn-outline-primary]="authForm.value.role !== 'Speaker'"
                     class="btn border-1">Speaker</button>
-            <button type="button" (click)="selectRole('Development')"
-                    [class.btn-primary]="selectedRole === 'Development'"
-                    [class.btn-outline-primary]="selectedRole !== 'Development'"
-                    class="btn border-1">Development</button>
+      
+            <button type="button" (click)="authForm.patchValue({role: 'Developer'})"
+                    [class.btn-primary]="authForm.value.role === 'Developer'"
+                    [class.btn-outline-primary]="authForm.value.role !== 'Developer'"
+                    class="btn border-1">Developer</button>
           </div>
         </div>
 
@@ -236,11 +237,6 @@
                 style="background-color: #5a00b3; border-radius: 8px;">
           {{ isLoginMode ? 'Login' : 'Register Now' }}
         </button>
-
-        <p *ngIf="errorMessage" class="text-danger text-center mt-3 fw-bold small">{{ errorMessage }}</p>
-        <p *ngIf="submitted" class="text-success text-center mt-3 fw-bold small">
-          {{ isLoginMode ? 'Welcome back!' : 'Success! Welcome aboard.' }}
-        </p>
       </form>
     </div>
   </div>

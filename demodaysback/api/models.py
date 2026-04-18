@@ -15,7 +15,7 @@ class Profile(models.Model):
     image = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.user.username} ({self.role})"
+        return f"{self.user.username} - ({self.role})"
     
 class Event(models.Model):
     title = models.CharField(max_length=200)

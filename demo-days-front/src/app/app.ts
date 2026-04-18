@@ -22,7 +22,10 @@ export class App {
   authForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    confirmPassword: new FormControl('', [Validators.required])
+    password_confirm: new FormControl('', [Validators.required]),
+    first_name: new FormControl('', [Validators.required]),
+    last_name: new FormControl('', [Validators.required]),
+    role: new FormControl('Guest', [Validators.required])
   });
 
   toggleMode(mode: boolean) {
@@ -53,37 +56,24 @@ export class App {
     this.errorMessage = '';
     this.submitted = false;
 
-    if (this.authForm.valid) {
-      // Проверка совпадения паролей перед отправкой
-      if (this.authForm.value.password !== this.authForm.value.confirmPassword) {
-        this.errorMessage = 'Passwords do not match.';
-        return;
+  // Если это регистрация, отправляем все данные формы
+    const payload = this.authForm.value;
+
+    this.http.post('http://127.0.0.1:8000/api/register/', payload).subscribe({
+      next: (res) => {
+        this.submitted = true;
+        this.authForm.reset({ role: 'Guest' }); // сбрасываем форму
+        this.cdr.detectChanges();
+        setTimeout(() => this.modalService.dismissAll(), 2000);
+      },
+      error: (err) => {
+      // Выводим первую ошибку от бэкенда
+        const errors = err.error;
+        this.errorMessage = errors.email ? errors.email[0] : 
+                            errors.password_confirm ? errors.password_confirm[0] : 
+                            'Check your data and try again.';
+        this.cdr.detectChanges();
       }
-
-      const payload = {
-        email: this.authForm.value.email,
-        password: this.authForm.value.password,
-        role: this.selectedRole
-      };
-
-      this.http.post('http://127.0.0.1:8000/api/subscribe/', payload).subscribe({
-        next: () => {
-          this.submitted = true;
-          this.authForm.reset();
-          this.cdr.detectChanges();
-
-          // Закрываем модалку автоматически через 2 секунды после успеха
-          setTimeout(() => this.modalService.dismissAll(), 2000);
-        },
-        error: (err) => {
-          this.errorMessage = err.status === 400
-            ? 'This email is already registered.'
-            : 'Server error. Please try again later.';
-          this.cdr.detectChanges();
-        }
-      });
-    } else {
-      this.errorMessage = 'Please fill out the form correctly.';
-    }
+    });
   }
 }

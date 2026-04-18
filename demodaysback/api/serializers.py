@@ -57,21 +57,40 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'owner', 'event', 'created_at']
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    role = serializers.ChoiceField(choices=Profile.ROLE_CHOICES, write_only=True)
+    password_confirm = serializers.CharField(write_only=True)
+    role = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'email', 'role']
-
+        fields = ['email', 'first_name', 'last_name', 'password', 'password_confirm', 'role']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'first_name': {'required': True},
+            'last_name': {'required': True}
+        }
+    
+    def validate(self, data):
+        if data['password'] != data['password_confirm']:
+            raise serializers.ValidationError({"password": "Пароли не совпадают"})
+        return data
+        if User.objects.filter(email=data['email']).exists():
+            raise serializers.ValidationError("User with such an email exists.")
+        return data
+    
     def create(self, validated_data):
-        role = validated_data.pop('role', 'GUEST')
+        role = validated_data.pop('role')
+        validated_data.pop('password_confirm')
+
         user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email', ''),
-            password=validated_data['password']
+            username=validated_data['email'],
+            email=validated_data['email'],
+            password=validated_data['password'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name']
         )
+
         Profile.objects.create(user=user, role=role)
+
         return user
 
 class EmailReceiverSerializer(serializers.ModelSerializer):
