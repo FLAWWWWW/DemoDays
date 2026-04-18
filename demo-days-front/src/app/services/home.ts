@@ -13,4 +13,8 @@ export class Home {
   getEvents(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+
+  getEventById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}${id}/`);
+  }
 }

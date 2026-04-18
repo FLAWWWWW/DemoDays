@@ -1,35 +1,45 @@
 <div class="container mt-5">
-  
 
-  <!-- Карусель -->
-  <ngb-carousel [showNavigationIndicators]="false" [showNavigationArrows]="true" [interval]="0">
-    <ng-template ngbSlide *ngFor="let event of events">
-      <div class="row g-0 rounded-3 overflow-hidden shadow-lg" style="min-height: 400px; background-color: #25254d;">
-        <!-- Картинка -->
-        <div class="col-md-6 bg-white d-flex align-items-center justify-content-center">
-          <img src="{{ event.image }}" class="img-fluid" alt="Event">
+  <div *ngIf="events.length === 0" class="text-center text-white py-5">
+    <div class="spinner-border text-light" role="status"></div>
+  </div>
+
+  <div *ngIf="events.length > 0">
+    <!-- Карусель -->
+    <div class="row g-0 rounded-3 overflow-hidden shadow-lg"
+         style="min-height: 400px; background-color: #25254d;">
+      <div class="col-md-6 bg-white d-flex align-items-center justify-content-center">
+        <img [src]="events[currentIndex].image" class="img-fluid" alt="Event">
+      </div>
+      <div class="col-md-6 p-5 text-white d-flex flex-column justify-content-between">
+        <div>
+          <h4>{{ events[currentIndex].title }}</h4>
+          <p class="lh-lg opacity-75">{{ events[currentIndex].description }}</p>
         </div>
-
-        <!-- Текст -->
-        <div class="col-md-6 p-5 text-white d-flex flex-column justify-content-between">
-          <div>
-            <h4>{{ event.title }}</h4>
-            <p class="lh-lg opacity-75 event-description">{{ event.description }}</p>
-          </div>
-          <div class="d-flex justify-content-end">
-            <button class="btn border-0 px-4 py-2 fw-bold" style="background-color: #e91e63; color: white;">More info</button>
-          </div>
+        <div class="d-flex justify-content-end">
+          <button class="btn border-0 px-4 py-2 fw-bold"
+                  style="background-color: #e91e63; color: white;"
+                  [routerLink]="['/event', events[currentIndex].id]">
+            More info
+          </button>
         </div>
       </div>
-    </ng-template>
-  </ngb-carousel>
+    </div>
 
-  <div class="d-flex justify-content-center mt-4 gap-2">
-    <div style="width: 45px; height: 6px; background: #e91e63; border-radius: 2px; cursor: pointer;"></div>
-    <div style="width: 45px; height: 6px; background: #00aeef; border-radius: 2px; cursor: pointer;"></div>
-    <div style="width: 45px; height: 6px; background: #00aeef; border-radius: 2px; cursor: pointer;"></div>
-    <div style="width: 45px; height: 6px; background: #00aeef; border-radius: 2px; cursor: pointer;"></div>
-    <div style="width: 45px; height: 6px; background: #00aeef; border-radius: 2px; cursor: pointer;"></div>
-    <div style="width: 45px; height: 6px; background: #00aeef; border-radius: 2px; cursor: pointer;"></div>
+    <!-- Стрелки и индикаторы -->
+    <div class="d-flex justify-content-center align-items-center mt-4 gap-3">
+      <button class="btn btn-sm btn-outline-light rounded-circle" (click)="prev()">‹</button>
+
+      <div class="d-flex gap-2">
+        <div *ngFor="let e of events; let i = index"
+             (click)="goTo(i)"
+             style="width: 45px; height: 6px; border-radius: 2px; cursor: pointer;"
+             [style.background]="i === currentIndex ? '#e91e63' : '#00aeef'">
+        </div>
+      </div>
+
+      <button class="btn btn-sm btn-outline-light rounded-circle" (click)="next()">›</button>
+    </div>
   </div>
-</div> 
+
+</div>
