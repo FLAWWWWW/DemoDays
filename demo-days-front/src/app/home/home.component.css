@@ -31,3 +31,20 @@
   background: linear-gradient(to right, rgba(255,255,255,0.5), transparent);
   cursor: pointer;
 }
+
+.event-carousel-img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 20px;
+}
+
+.text-limit{
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-height: calc(1.5em * 12);
+}

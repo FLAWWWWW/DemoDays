@@ -208,13 +208,18 @@
           <div class="btn-group w-100">
             <button type="button" (click)="selectRole('Guest')"
                     [class.btn-primary]="authForm.value.role === 'Guest'"
-                    class="btn btn-outline-primary border-1">Guest</button>
+                    [class.btn-outline-primary]="authForm.value.role !== 'Guest'"
+                    class="btn fw-bold">Guest</button>
+
             <button type="button" (click)="selectRole('Speaker')"
                     [class.btn-primary]="authForm.value.role === 'Speaker'"
-                    class="btn btn-outline-primary border-1">Speaker</button>
+                    [class.btn-outline-primary]="authForm.value.role !== 'Speaker'"
+                    class="btn fw-bold">Speaker</button>
+
             <button type="button" (click)="selectRole('Developer')"
                     [class.btn-primary]="authForm.value.role === 'Developer'"
-                    class="btn btn-outline-primary border-1">Developer</button>
+                    [class.btn-outline-primary]="authForm.value.role !== 'Developer'"
+                    class="btn fw-bold">Developer</button>
           </div>
         </div>
 

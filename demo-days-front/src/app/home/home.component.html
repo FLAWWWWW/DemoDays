@@ -9,12 +9,12 @@
     <div class="row g-0 rounded-3 overflow-hidden shadow-lg"
          style="min-height: 400px; background-color: #25254d;">
       <div class="col-md-6 bg-white d-flex align-items-center justify-content-center">
-        <img [src]="events[currentIndex].image" class="img-fluid" alt="Event">
+        <img [src]="events[currentIndex].image" class="event-carousel-img" alt="Event">
       </div>
       <div class="col-md-6 p-5 text-white d-flex flex-column justify-content-between">
         <div>
           <h4>{{ events[currentIndex].title }}</h4>
-          <p class="lh-lg opacity-75">{{ events[currentIndex].description }}</p>
+          <p class="lh-lg opacity-75 text-limit">{{ events[currentIndex].description }}</p>
         </div>
         <div class="d-flex justify-content-end">
           <button class="btn border-0 px-4 py-2 fw-bold"
