@@ -1,49 +1,77 @@
-<div class="container py-5 text-white" style="background-color: #0f1021; min-height: 100vh;">
+<div class="container py-5 text-white" style="background-color: rgba(15,16,33,0); min-height: 100vh;">
   <h2 class="mb-4 fw-bold">Account Setting</h2>
 
   <div class="p-4 mb-5" style="background-color: #c5c6e0; border-radius: 12px; color: #333;">
-    <div class="d-flex align-items-center mb-4">
-      <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-        <i class="bi bi-person-fill text-white fs-1"></i>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+
+      <div class="d-flex align-items-center">
+        <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+          <i class="bi bi-person-fill text-white fs-1"></i>
+        </div>
+        <button class="btn btn-light btn-sm ms-3 border shadow-sm fw-bold" style="color: #333;">Load Avatar</button>
       </div>
-      <button class="btn btn-light btn-sm ms-3 border shadow-sm">Load Avatar</button>
+
+      <button (click)="onLogout()" class="btn text-white fw-bold px-4"
+              style="background-color: #f5317f; border-radius: 20px; border: none; height: 40px;">
+        Log out
+      </button>
     </div>
 
     <form [formGroup]="profileForm">
       <div class="row g-3">
         <div class="col-md-6">
+          <label class="form-label fw-bold">Name</label>
           <input type="text" formControlName="name" class="form-control border-0 py-2" placeholder="Name">
         </div>
         <div class="col-md-6">
+          <label class="form-label fw-bold">Surname</label>
           <input type="text" formControlName="surname" class="form-control border-0 py-2" placeholder="Surname">
         </div>
 
         <div class="col-md-6">
+          <label class="form-label fw-bold">Phone Number</label>
           <input type="text" formControlName="phone" class="form-control border-0 py-2" placeholder="Phone Number">
         </div>
         <div class="col-md-6">
+          <label class="form-label fw-bold">E-mail</label>
           <input type="email" formControlName="email" class="form-control border-0 py-2" placeholder="E-mail">
         </div>
 
         <div class="col-12 mt-3">
           <label class="fw-bold mb-2">Change Role</label>
-          <div class="btn-group w-100">
+          <div class="btn-group w-100 shadow-sm" style="border-radius: 8px; overflow: hidden;">
             <button type="button" (click)="profileForm.patchValue({role: 'Guest'})"
-                    [class.btn-primary]="profileForm.value.role === 'Guest'"
-                    [class.btn-outline-primary]="profileForm.value.role !== 'Guest'"
-                    class="btn border-1">Guest</button>
+                    [class.btn-primary]="profileForm.get('role')?.value === 'Guest'"
+                    [class.btn-light]="profileForm.get('role')?.value !== 'Guest'"
+                    class="btn border-1 fw-bold py-2"
+                    [style.color]="profileForm.get('role')?.value === 'Guest' ? '#fff' : '#0d6efd'"
+                    [style.background-color]="profileForm.get('role')?.value === 'Guest' ? '#0d6efd' : '#fff'">
+              Guest
+            </button>
+
             <button type="button" (click)="profileForm.patchValue({role: 'Speaker'})"
-                    [class.btn-primary]="profileForm.value.role === 'Speaker'"
-                    [class.btn-outline-primary]="profileForm.value.role !== 'Speaker'"
-                    class="btn border-1">Speaker</button>
+                    [class.btn-primary]="profileForm.get('role')?.value === 'Speaker'"
+                    [class.btn-light]="profileForm.get('role')?.value !== 'Speaker'"
+                    class="btn border-1 fw-bold py-2"
+                    [style.color]="profileForm.get('role')?.value === 'Speaker' ? '#fff' : '#0d6efd'"
+                    [style.background-color]="profileForm.get('role')?.value === 'Speaker' ? '#0d6efd' : '#fff'">
+              Speaker
+            </button>
+
             <button type="button" (click)="profileForm.patchValue({role: 'Development'})"
-                    [class.btn-primary]="profileForm.value.role === 'Development'"
-                    [class.btn-outline-primary]="profileForm.value.role !== 'Development'"
-                    class="btn border-1">Development</button>
+                    [class.btn-primary]="profileForm.get('role')?.value === 'Development'"
+                    [class.btn-light]="profileForm.get('role')?.value !== 'Development'"
+                    class="btn border-1 fw-bold py-2"
+                    [style.color]="profileForm.get('role')?.value === 'Development' ? '#fff' : '#0d6efd'"
+                    [style.background-color]="profileForm.get('role')?.value === 'Development' ? '#0d6efd' : '#fff'">
+              Development
+            </button>
           </div>
         </div>
 
         <div class="col-12 mt-3">
+          <label class="fw-bold mb-2">Biography</label>
           <textarea formControlName="bio" class="form-control border-0 py-2" rows="3" placeholder="Biography"></textarea>
         </div>
       </div>
@@ -66,7 +94,7 @@
           <input type="password" formControlName="newPassword" class="form-control border-0 py-2" placeholder="New Password">
         </div>
       </div>
-      <button class="btn btn-light mt-4 border px-4">Save changes</button>
+      <button class="btn btn-light mt-4 border px-4 fw-bold shadow-sm">Save changes</button>
     </form>
   </div>
 </div>

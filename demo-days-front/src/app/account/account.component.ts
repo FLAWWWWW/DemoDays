@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-account',
@@ -11,6 +14,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './account.component.css'
 })
 export class AccountComponent {
+  constructor(private router: Router) {}
   profileForm = new FormGroup({
     name: new FormControl(''),
     surname: new FormControl(''),
@@ -19,6 +23,12 @@ export class AccountComponent {
     bio: new FormControl(''),
     role: new FormControl('Guest')
   });
+
+  onLogout() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    this.router.navigate(['/']); // редирект на главную или страницу логина
+  }
 
   passwordForm = new FormGroup({
     oldPassword: new FormControl('', [Validators.required]),
