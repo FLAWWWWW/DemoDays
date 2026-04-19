@@ -103,15 +103,13 @@
     <nav class="navbar navbar-expand-lg py-2">
       <div class="container-fluid">
         <div class="navbar-nav me-auto d-flex flex-row gap-4">
-          <a class="nav-link text-white fw-bold" href="">Events</a>
-          <a class="nav-link text-white fw-bold" href="about">About</a>
+          <a class="nav-link text-white fw-bold" href="#">Events</a>
+          <a class="nav-link text-white fw-bold" href="#">About</a>
         </div>
 
         <div class="d-flex align-items-center text-white">
           <div class="dropdown" ngbDropdown>
-            <button class="btn text-white fw-bold border-0" ngbDropdownToggle>
-              Rus
-            </button>
+            <button class="btn text-white fw-bold border-0" ngbDropdownToggle>Rus</button>
             <ul class="dropdown-menu dropdown-menu-end shadow" ngbDropdownMenu>
               <li><a class="dropdown-item" href="#">Kz</a></li>
               <li><a class="dropdown-item" href="#">Eng</a></li>
@@ -139,9 +137,7 @@
       <div class="col-md-3">
         <img src="logo.png" width="60" class="mb-3">
         <div class="d-flex gap-2 fs-4">
-          <i class="bi bi-facebook"></i>
-          <i class="bi bi-telegram"></i>
-          <i class="bi bi-whatsapp"></i>
+          <i class="bi bi-facebook"></i><i class="bi bi-telegram"></i><i class="bi bi-whatsapp"></i>
         </div>
       </div>
       <div class="col-md-3">
@@ -151,42 +147,36 @@
       </div>
       <div class="col-md-6">
         <h5>Newsletter</h5>
-        <p class="mb-1 opacity-75">
-          We select the week's key events and then share them in an engaging way in our newsletter.
-        </p>
+        <p class="mb-1 opacity-75">We select the week's key events and share them in our newsletter.</p>
         <div class="input-group mt-2">
-          <input [formControl]="authForm.controls.email" type="email" class="form-control border-0"
-                 placeholder="E-mail" style="background: #e0e0e0;">
-          <button (click)="onSubmit()" [disabled]="authForm.controls.email.invalid"
-                  class="btn text-white px-4" style="background-color: #5a00b3;">Send</button>
+          <input [formControl]="authForm.controls.email" type="email" class="form-control border-0" placeholder="E-mail" style="background: #e0e0e0;">
+          <button (click)="onSubmit()" class="btn text-white px-4" style="background-color: #5a00b3;">Send</button>
         </div>
-        <p *ngIf="submitted" style="color: #4caf50;" class="mt-2 fw-bold">Email sent successfully!</p>
-        <p *ngIf="errorMessage" style="color: #e91e63;" class="mt-2 fw-bold">{{ errorMessage }}</p>
       </div>
     </div>
   </div>
 </footer>
 
 <ng-template #authModal let-modal>
-  <div class="modal-body p-0"> <div class="d-flex w-100 mb-4" style="background-color: #f0f0f0; border-top-left-radius: 8px; border-top-right-radius: 8px;">
-    <button type="button"
-            class="btn py-3 w-50 fw-bold border-0"
-            [style.background-color]="!isLoginMode ? 'transparent' : '#ccc'"
-            (click)="toggleMode(false)"
-            style="border-radius: 0;">
-      Registration
-    </button>
-    <button type="button"
-            class="btn py-3 w-50 fw-bold border-0"
-            [style.background-color]="isLoginMode ? 'transparent' : '#ccc'"
-            (click)="toggleMode(true)"
-            style="border-radius: 0;">
-      Login
-    </button>
-  </div>
+  <div class="modal-body p-0">
+    <div class="d-flex w-100 mb-4" style="background-color: #f0f0f0; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+      <button type="button" class="btn py-3 w-50 fw-bold border-0"
+              [style.background-color]="!isLoginMode ? 'transparent' : '#ccc'" (click)="toggleMode(false)">
+        Registration
+      </button>
+      <button type="button" class="btn py-3 w-50 fw-bold border-0"
+              [style.background-color]="isLoginMode ? 'transparent' : '#ccc'" (click)="toggleMode(true)">
+        Login
+      </button>
+    </div>
 
     <div class="p-4 pt-0">
       <form [formGroup]="authForm">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Username</label>
+          <input type="text" formControlName="username" class="form-control bg-light border-0" placeholder="Pick a unique username">
+        </div>
+
         <div class="mb-3">
           <label class="form-label fw-bold">E-mail</label>
           <input type="email" formControlName="email" class="form-control bg-light border-0" placeholder="Enter your email">
@@ -216,27 +206,29 @@
         <div *ngIf="!isLoginMode" class="mb-4">
           <label class="form-label fw-bold d-block">Role</label>
           <div class="btn-group w-100">
-            <button type="button" (click)="authForm.patchValue({role: 'Guest'})"
+            <button type="button" (click)="selectRole('Guest')"
                     [class.btn-primary]="authForm.value.role === 'Guest'"
-                    [class.btn-outline-primary]="authForm.value.role !== 'Guest'"
-                    class="btn border-1">Guest</button>
-      
-            <button type="button" (click)="authForm.patchValue({role: 'Speaker'})"
+                    class="btn btn-outline-primary border-1">Guest</button>
+            <button type="button" (click)="selectRole('Speaker')"
                     [class.btn-primary]="authForm.value.role === 'Speaker'"
-                    [class.btn-outline-primary]="authForm.value.role !== 'Speaker'"
-                    class="btn border-1">Speaker</button>
-      
-            <button type="button" (click)="authForm.patchValue({role: 'Developer'})"
+                    class="btn btn-outline-primary border-1">Speaker</button>
+            <button type="button" (click)="selectRole('Developer')"
                     [class.btn-primary]="authForm.value.role === 'Developer'"
-                    [class.btn-outline-primary]="authForm.value.role !== 'Developer'"
-                    class="btn border-1">Developer</button>
+                    class="btn btn-outline-primary border-1">Developer</button>
           </div>
         </div>
 
-        <button (click)="onSubmit()" class="btn w-100 text-white fw-bold py-2"
-                style="background-color: #5a00b3; border-radius: 8px;">
+        <button (click)="onSubmit()" class="btn w-100 text-white fw-bold py-2" style="background-color: #5a00b3; border-radius: 8px;">
           {{ isLoginMode ? 'Login' : 'Register Now' }}
         </button>
+
+        <p *ngIf="errorMessage" class="text-danger text-center mt-3 fw-bold small">
+          {{ errorMessage }}
+        </p>
+
+        <p *ngIf="submitted" class="text-success text-center mt-3 fw-bold small">
+          Success! Done.
+        </p>
       </form>
     </div>
   </div>
