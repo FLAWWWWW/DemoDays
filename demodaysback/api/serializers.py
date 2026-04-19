@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Event, Project, Profile, Feedback, EmailReceiver
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core import exceptions
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,8 +59,13 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'owner', 'event', 'created_at']
 
 class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True,
+        required=True,
+        validators=[validate_password]
+    )
     password_confirm = serializers.CharField(write_only=True)
-    role = serializers.CharField(write_only=True)
+    role = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = User
@@ -71,29 +78,43 @@ class RegisterSerializer(serializers.ModelSerializer):
     
     def validate(self, data):
         if data['password'] != data['password_confirm']:
-            raise serializers.ValidationError({"password": "Пароли не совпадают"})
+            raise serializers.ValidationError({"password": "Passwords aren't matching"})
+        try:
+            validate_password(data['password'])
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({"password": list(e.messages)})
         return data
         if User.objects.filter(email=data['email']).exists():
             raise serializers.ValidationError("User with such an email exists.")
         return data
     
     def create(self, validated_data):
-        role = validated_data.pop('role')
+        role = validated_data.pop('role', 'Guest')
         validated_data.pop('password_confirm')
 
-        user = User.objects.create_user(
+        user = User(
             username=validated_data['email'],
             email=validated_data['email'],
             password=validated_data['password'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name']
         )
+        user.set_password(validated_data['password'])
+        user.save()
 
-        Profile.objects.create(user=user, role=role)
-
+        if hasattr(user, 'profile'):
+            user.profile.role = role
+            user.profile.save()
         return user
 
 class EmailReceiverSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailReceiver
         fields = ['email']
+
+class UserMeSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(source='profile.role', read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'role']

@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import(
     TokenRefreshView,
 )
 from . import views
-from .views import LogoutView, RegisterView
+from .views import LogoutView, RegisterView, CurrentUserView
 
 urlpatterns = [
     #Auth
@@ -12,6 +12,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', views.RegisterView.as_view(), name='register'),
     path('logout/', LogoutView.as_view(), name='token_refresh'),
+    path('api/user/me/', CurrentUserView.as_view(), name = 'user-me'),
     #API
     path('events/', views.event_list, name='event-list'),
     path('events/<int:pk>/', views.event_detail, name='event-detail'),
