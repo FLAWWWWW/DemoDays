@@ -1,21 +1,19 @@
-<div class="container py-5 text-white" style="background-color: rgba(15,16,33,0); min-height: 100vh;">
-  <h2 class="mb-4 fw-bold">Account Setting</h2>
+<div class="container py-5 text-white" style="background-color: #0f1021; min-height: 100vh;">
+
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="fw-bold m-0">Account Setting</h2>
+    <button (click)="onLogout()" class="btn text-white fw-bold px-4"
+            style="background-color: #f5317f; border-radius: 20px; border: none; height: 40px;">
+      Log out
+    </button>
+  </div>
 
   <div class="p-4 mb-5" style="background-color: #c5c6e0; border-radius: 12px; color: #333;">
-
-    <div class="d-flex align-items-center justify-content-between mb-4">
-
-      <div class="d-flex align-items-center">
-        <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-          <i class="bi bi-person-fill text-white fs-1"></i>
-        </div>
-        <button class="btn btn-light btn-sm ms-3 border shadow-sm fw-bold" style="color: #333;">Load Avatar</button>
+    <div class="d-flex align-items-center mb-4">
+      <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+        <i class="bi bi-person-fill text-white fs-1"></i>
       </div>
-
-      <button (click)="onLogout()" class="btn text-white fw-bold px-4"
-              style="background-color: #f5317f; border-radius: 20px; border: none; height: 40px;">
-        Log out
-      </button>
+      <button class="btn btn-light btn-sm ms-3 border shadow-sm fw-bold" style="color: #333;">Load Avatar</button>
     </div>
 
     <form [formGroup]="profileForm">
@@ -42,26 +40,18 @@
           <label class="fw-bold mb-2">Change Role</label>
           <div class="btn-group w-100 shadow-sm" style="border-radius: 8px; overflow: hidden;">
             <button type="button" (click)="profileForm.patchValue({role: 'Guest'})"
-                    [class.btn-primary]="profileForm.get('role')?.value === 'Guest'"
-                    [class.btn-light]="profileForm.get('role')?.value !== 'Guest'"
                     class="btn border-1 fw-bold py-2"
                     [style.color]="profileForm.get('role')?.value === 'Guest' ? '#fff' : '#0d6efd'"
                     [style.background-color]="profileForm.get('role')?.value === 'Guest' ? '#0d6efd' : '#fff'">
               Guest
             </button>
-
             <button type="button" (click)="profileForm.patchValue({role: 'Speaker'})"
-                    [class.btn-primary]="profileForm.get('role')?.value === 'Speaker'"
-                    [class.btn-light]="profileForm.get('role')?.value !== 'Speaker'"
                     class="btn border-1 fw-bold py-2"
                     [style.color]="profileForm.get('role')?.value === 'Speaker' ? '#fff' : '#0d6efd'"
                     [style.background-color]="profileForm.get('role')?.value === 'Speaker' ? '#0d6efd' : '#fff'">
               Speaker
             </button>
-
             <button type="button" (click)="profileForm.patchValue({role: 'Development'})"
-                    [class.btn-primary]="profileForm.get('role')?.value === 'Development'"
-                    [class.btn-light]="profileForm.get('role')?.value !== 'Development'"
                     class="btn border-1 fw-bold py-2"
                     [style.color]="profileForm.get('role')?.value === 'Development' ? '#fff' : '#0d6efd'"
                     [style.background-color]="profileForm.get('role')?.value === 'Development' ? '#0d6efd' : '#fff'">
@@ -83,8 +73,7 @@
   </div>
 
   <h2 class="mb-4 fw-bold">Change Password</h2>
-
-  <div class="p-4" style="background-color: #c5c6e0; border-radius: 12px; color: #333;">
+  <div class="p-4 mb-5" style="background-color: #c5c6e0; border-radius: 12px; color: #333;">
     <form [formGroup]="passwordForm">
       <div class="row g-3">
         <div class="col-md-6">
@@ -97,4 +86,46 @@
       <button class="btn btn-light mt-4 border px-4 fw-bold shadow-sm">Save changes</button>
     </form>
   </div>
+
+  <div class="mb-5">
+    <h2 class="mb-4 fw-bold">Create Presentation</h2>
+    <div class="p-4" style="background-color: #c5c6e0; border-radius: 12px; color: #333;">
+      <form [formGroup]="presentationForm">
+        <div class="mb-4">
+          <label class="fw-bold mb-2">Name of Presentation</label>
+          <input type="text" formControlName="presentationName" class="form-control border-0 py-2" placeholder="Enter title">
+        </div>
+
+        <div class="row align-items-center mb-4">
+          <div class="col-md-2">
+            <input type="number" formControlName="participantCount" class="form-control border-0 py-2 text-center" placeholder="0">
+          </div>
+          <div class="col-md-10">
+            <span class="fw-bold">Кол во участников - выбираем число</span>
+          </div>
+        </div>
+
+        <div formArrayName="participants">
+          <label class="fw-bold mb-2">Participants (First Name & Last Name)</label>
+          <div *ngFor="let p of participants.controls; let i = index" [formGroupName]="i" class="row g-2 mb-2 align-items-center">
+            <div class="col-md-5">
+              <input type="text" formControlName="firstName" class="form-control border-0 py-2" placeholder="First Name">
+            </div>
+            <div class="col-md-5">
+              <input type="text" formControlName="lastName" class="form-control border-0 py-2" placeholder="Last Name">
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+              <button type="button" (click)="addParticipant()" class="btn btn-dark fw-bold w-100" *ngIf="i === participants.length - 1">+</button>
+              <button type="button" (click)="removeParticipant(i)" class="btn btn-outline-danger border-0 fw-bold w-100" *ngIf="participants.length > 1">×</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+          <button class="btn text-white px-5 fw-bold" style="background-color: #f5317f; border-radius: 5px;">Save Presentation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </div>
