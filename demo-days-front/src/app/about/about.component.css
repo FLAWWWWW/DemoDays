@@ -1,0 +1,55 @@
+.about-container {
+  background-color: #0f1021; /* Основной фон из Account Settings */
+  min-height: 100vh;
+  font-family: sans-serif; /* Или твой шрифт проекта */
+}
+
+/* Карточка миссии (как в настройках аккаунта) */
+.info-card {
+  background-color: #c5c6e0; /* Тот самый светло-сиреневый цвет */
+  border-radius: 12px;
+  color: #333;
+}
+
+/* Карточка команды (как в Event Carousel) */
+.team-card {
+  background-color: #25254d; /* Темно-синий из карусели событий */
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.avatar-circle {
+  width: 60px;
+  height: 60px;
+  background-color: #6c757d;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.img-placeholder {
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+}
+
+/* Кнопка в стиле проекта */
+.btn-pink {
+  background-color: #f5317f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.btn-pink:hover {
+  background-color: #d42a6d;
+  color: white;
+}
+
+h1, h2 {
+  letter-spacing: -1px;
+}
