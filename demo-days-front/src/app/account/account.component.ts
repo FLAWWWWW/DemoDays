@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-account',
@@ -11,8 +12,30 @@ import { Router } from '@angular/router';
   styleUrl: './account.component.css'
 })
 
-export class AccountComponent {
-  constructor(private router: Router) {}
+export class AccountComponent implements OnInit {
+
+  events: any[] = [];
+  private apiURL = 'http://127.0.0.1:8000/api/events';
+
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {}
+
+  ngOnInit():void {
+    this.loadEventsFromDjango();
+  }
+
+  loadEventsFromDjango(){
+    this.http.get<any[]>(this.apiURL + 'events').subscribe({
+      next: (data) =>{
+        this.events = data;
+        console.log('Events loaded', this.events);
+      },
+      error: (error) => console.error('Error loading events', error)
+    });
+  }
+
   profileForm = new FormGroup({
     name: new FormControl(''),
     surname: new FormControl(''),
@@ -48,6 +71,13 @@ export class AccountComponent {
   removeParticipant(index: number){
     if (this.participants.length > 1){
       this.participants.removeAt(index);
+    }
+  }
+
+  onSubmitPresentation(){
+    if(this.presentationForm.valid){
+      const payload = this.presentationForm.value;
+      console.log('Sending presentations,', payload);
     }
   }
 

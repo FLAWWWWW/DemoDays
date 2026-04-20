@@ -91,6 +91,19 @@
     <h2 class="mb-4 fw-bold">Create Presentation</h2>
     <div class="p-4" style="background-color: #c5c6e0; border-radius: 12px; color: #333;">
       <form [formGroup]="presentationForm">
+
+        <div class="mb-4">
+          <label class="fw-bold mb-2">Select Event</label>
+          <div class="dropdown">
+            <select formControlName="eventId" class="form-select border-0 py-2 shadow-sm" style="background-color: #ffffff; border-radius: 8px; cursor:pointer;">
+              <option value="" disabled selected>Choose an event from the list...</option>
+              <option *ngFor="let event of events" [value]="event.id">
+                {{event.name}}
+              </option>
+            </select>
+          </div>
+        </div>
+
         <div class="mb-4">
           <label class="fw-bold mb-2">Name of Presentation</label>
           <input type="text" formControlName="presentationName" class="form-control border-0 py-2" placeholder="Enter title">
