@@ -76,9 +76,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         except exceptions.ValidationError as e:
             raise serializers.ValidationError({"password": list(e.messages)})
         return data
-        if User.objects.filter(email=data['email']).exists():
-            raise serializers.ValidationError("User with such an email exists.")
-        return data
+    
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("User with that email already exists")
+        return value
     
     def create(self, validated_data):
         validated_data.pop('password_confirm')
