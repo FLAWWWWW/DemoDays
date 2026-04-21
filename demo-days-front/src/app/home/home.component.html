@@ -28,7 +28,9 @@
 
     <!-- Стрелки и индикаторы -->
     <div class="d-flex justify-content-center align-items-center mt-4 gap-3">
-      <button class="btn btn-sm btn-outline-light rounded-circle" (click)="prev()">‹</button>
+      <button class="arrow-container" (click)="prev()">
+        <i class="custom-arrow left"></i>
+      </button>
 
       <div class="d-flex gap-2">
         <div *ngFor="let e of events; let i = index"
@@ -38,7 +40,9 @@
         </div>
       </div>
 
-      <button class="btn btn-sm btn-outline-light rounded-circle" (click)="next()">›</button>
+      <button class="arrow-container" (click)="next()">
+        <i class="custom-arrow right"></i>
+      </button>
     </div>
   </div>
 
