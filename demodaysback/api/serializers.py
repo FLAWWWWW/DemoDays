@@ -5,9 +5,21 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 
 class ProfileSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    email = serializers.EmailField(source='user.email', read_only=True)
     class Meta:
         model = Profile
-        fields = ['id', 'role', 'bio', 'phone']
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'role', 'bio']
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop('user', {})
+
+        user = instance.user
+        user.first_name = validated_data.get('first_name', user.first_name)
+        user.last_name = validated_data.get('last_name', user.last_name)
+        user.save()
+
+        return super().update(instance, validated_data)
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)

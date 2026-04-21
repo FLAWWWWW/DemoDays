@@ -5,7 +5,29 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Event, Project, Feedback, Profile
-from .serializers import EventSerializer, ProjectSerializer, FeedbackSerializer, RegisterSerializer, EmailReceiverSerializer, UserMeSerializer
+from .serializers import EventSerializer, ProjectSerializer, FeedbackSerializer, RegisterSerializer, EmailReceiverSerializer, UserMeSerializer, ProfileSerializer
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def manage_profile(request):
+    profile = request.user.profile
+
+    if request.method == 'GET':
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
+        serializer = ProfileSerializer(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Profile updated successfully!"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        user = request.user
+        user.delete()
+        return Response({"message": "Account deleted successfully!"}, status=status.HTTP_204_NO_CONTENT)
+    return Response({"status": "success"})
 
 @api_view(['GET', 'POST'])
 def event_list(request):

@@ -14,6 +14,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='token_refresh'),
     path('user/me/', CurrentUserView.as_view(), name='user-me'),
     path('upload-avatar/', views.UploadAvatarView.as_view(), name='upload-avatar'),
+    path('profile/me/', views.manage_profile, name='manage-profile'),
     #API
     path('events/', views.event_list, name='event-list'),
     path('events/<int:pk>/', views.event_detail, name='event-detail'),
