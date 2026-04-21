@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Event, Project, Feedback, Profile
 from .serializers import EventSerializer, ProjectSerializer, FeedbackSerializer, RegisterSerializer, EmailReceiverSerializer, UserMeSerializer, ProfileSerializer
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE', 'POST'])
 @permission_classes([IsAuthenticated])
 def manage_profile(request):
     profile = request.user.profile
@@ -27,6 +27,10 @@ def manage_profile(request):
         user = request.user
         user.delete()
         return Response({"message": "Account deleted successfully!"}, status=status.HTTP_204_NO_CONTENT)
+
+    elif request.method == 'POST':
+        return Response({"detail": "Create method is implemented through registration"}, status=status.HTTP_200_OK)
+
     return Response({"status": "success"})
 
 @api_view(['GET', 'POST'])
