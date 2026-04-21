@@ -21,6 +21,18 @@ import { AuthService } from './services/auth.service';
   styleUrl: './app.css'
 })
 export class App {
+
+  isvissiblePassword: boolean = false;
+  isvissiblePasswordRepeat: boolean = false;
+
+  togglePassword(){
+    this.isvissiblePassword = !this.isvissiblePassword;
+  }
+
+  toggleRepeate(){
+    this.isvissiblePasswordRepeat = !this.isvissiblePasswordRepeat;
+  }
+
   private modalService = inject(NgbModal);
   public authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
@@ -49,6 +61,8 @@ export class App {
   }
 
   openAuthModal(content: any) {
+    this.isvissiblePassword = false;
+    this.isvissiblePasswordRepeat = false;
     this.submitted = false;
     this.errorMessage = '';
     this.authForm.reset({ role: 'Guest' });

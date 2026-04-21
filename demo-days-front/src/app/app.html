@@ -154,8 +154,21 @@
     <div class="row">
       <div class="col-md-3">
         <img src="logo.png" width="60" class="mb-3">
-        <div class="d-flex gap-2 fs-4">
-          <i class="bi bi-facebook"></i><i class="bi bi-telegram"></i><i class="bi bi-whatsapp"></i>
+        <div class="d-flex gap-3 fs-4">
+          <a href="https://www.linkedin.com/company/akira-gamedev/?viewAsMember=true"
+             target="_blank" class="text-white decoration-none">
+            <i class="bi bi-linkedin"></i>
+          </a>
+
+          <a href="https://www.instagram.com/akira_gamedev/"
+             target="_blank" class="text-white decoration-none">
+            <i class="bi bi-instagram"></i>
+          </a>
+
+          <a href="https://t.me/akira_almaty"
+             target="_blank" class="text-white decoration-none">
+            <i class="bi bi-telegram"></i>
+          </a>
         </div>
       </div>
       <div class="col-md-3">
@@ -213,12 +226,37 @@
 
         <div class="mb-3">
           <label class="form-label fw-bold">Password</label>
-          <input type="password" formControlName="password" class="form-control bg-light border-0" placeholder="Password">
+          <div class="input-group">
+            <input [type]="isvissiblePassword ? 'text' : 'password'"
+                   formControlName="password"
+                   class="form-control bg-light border-0"
+                   placeholder="Password"
+                   style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+
+            <button type="button"
+                    class="btn btn-light border-0 d-flex align-items-center"
+                    (click)="togglePassword()"
+                    style="background-color: #f1f1f1; border-top-left-radius: 0; border-bottom-left-radius: 0;">
+              <i class="bi" [ngClass]="isvissiblePassword ? 'bi-eye-slash' : 'bi-eye'" style="color: #5a00b3; font-size: 1.2rem;"></i>
+            </button>
+          </div>
         </div>
 
         <div *ngIf="!isLoginMode" class="mb-3">
           <label class="form-label fw-bold">Confirm Password</label>
-          <input type="password" formControlName="password_confirm" class="form-control bg-light border-0" placeholder="Repeat password">
+          <div class="input-group">
+            <input [type]="isvissiblePasswordRepeat ? 'text' : 'password'"
+                   formControlName = "password_confirm"
+                   class="form-control bg-light border-0"
+                   placeholder="Repeat Password"
+                   style = "border-top-right-radius: 0; border-bottom-right-radius: 0;">
+            <button type="button"
+                    class="btn btn-light border-0 d-flex align-items-center"
+                    (click)="toggleRepeate()"
+                    style="background-color: #f1f1f1; border-top-left-radius: 0; border-bottom-left-radius: 0;">
+              <i class="bi" [ngClass]="isvissiblePasswordRepeat ? 'bi-eye-slash' : 'bi-eye'" style="color: #5a00b3; font-size: 1.2rem;"></i>
+            </button>
+          </div>
         </div>
 
         <div *ngIf="!isLoginMode" class="mb-4">

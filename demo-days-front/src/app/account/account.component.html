@@ -1,7 +1,12 @@
-<div class="container py-5 text-white" style="background-color: #0f1021; min-height: 100vh;">
+<div class="container py-5 text-white" style="min-height: 100vh;">
 
   <div class="d-flex align-items-center justify-content-between mb-4">
     <h2 class="fw-bold m-0">Account Setting</h2>
+
+    <button (click)="onDeleteAccount()" class="btn text-white fw-bold px-4"
+            style="background-color: #f5317f; border-radius: 20px; border: none; height: 40px;">
+      Delete Account
+    </button>
     <button (click)="onLogout()" class="btn text-white fw-bold px-4"
             style="background-color: #f5317f; border-radius: 20px; border: none; height: 40px;">
       Log out
@@ -97,21 +102,19 @@
     </form>
   </div>
 
-  <div class="mb-5">
+  <div class="mb-5" *ngIf="currentUser?.profile?.role === 'Speaker'">
     <h2 class="mb-4 fw-bold">Create Presentation</h2>
     <div class="p-4" style="background-color: #c5c6e0; border-radius: 12px; color: #333;">
       <form [formGroup]="presentationForm">
 
         <div class="mb-4">
           <label class="fw-bold mb-2">Select Event</label>
-          <div class="dropdown">
-            <select formControlName="eventId" class="form-select border-0 py-2 shadow-sm" style="background-color: #ffffff; border-radius: 8px; cursor:pointer;">
-              <option value="" disabled selected>Choose an event from the list...</option>
-              <option *ngFor="let event of events" [value]="event.id">
-                {{event.name}}
-              </option>
-            </select>
-          </div>
+          <select formControlName="eventId" class="form-select border-0 py-2 shadow-sm">
+            <option value="" disabled selected>Choose an event from the list...</option>
+            <option *ngFor="let event of events" [value]="event.id">
+              {{event.name}}
+            </option>
+          </select>
         </div>
 
         <div class="mb-4">
@@ -121,8 +124,9 @@
 
         <div class="row align-items-center mb-4">
           <div class="col-md-2">
-            <input type="number" formControlName="participantCount" class="form-control border-0 py-2 text-center" placeholder="0">
-          </div>
+            <input type="number" formControlName="participantCount"
+                   class="form-control border-0 py-2 text-center"
+                   min="1"> </div>
           <div class="col-md-10">
             <span class="fw-bold">Кол во участников - выбираем число</span>
           </div>
@@ -131,21 +135,22 @@
         <div formArrayName="participants">
           <label class="fw-bold mb-2">Participants (First Name & Last Name)</label>
           <div *ngFor="let p of participants.controls; let i = index" [formGroupName]="i" class="row g-2 mb-2 align-items-center">
-            <div class="col-md-5">
+            <div class="col-md-6">
               <input type="text" formControlName="firstName" class="form-control border-0 py-2" placeholder="First Name">
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
               <input type="text" formControlName="lastName" class="form-control border-0 py-2" placeholder="Last Name">
-            </div>
-            <div class="col-md-2 d-flex gap-2">
-              <button type="button" (click)="addParticipant()" class="btn btn-dark fw-bold w-100" *ngIf="i === participants.length - 1">+</button>
-              <button type="button" (click)="removeParticipant(i)" class="btn btn-outline-danger border-0 fw-bold w-100" *ngIf="participants.length > 1">×</button>
             </div>
           </div>
         </div>
 
         <div class="d-flex justify-content-end mt-4">
-          <button class="btn text-white px-5 fw-bold" style="background-color: #f5317f; border-radius: 5px;">Save Presentation</button>
+          <button (click)="onSubmitPresentation()"
+                  [disabled]="presentationForm.invalid"
+                  class="btn text-white px-5 fw-bold"
+                  style="background-color: #f5317f; border-radius: 5px;">
+            Save Presentation
+          </button>
         </div>
       </form>
     </div>
