@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { API_CONFIG } from '../config/api.config';
 
 @Component({
   selector: 'app-account',
@@ -20,8 +21,8 @@ export class AccountComponent implements OnInit {
   isUploading: boolean = false;
 
   private readonly API_URLS = {
-    events: 'http://127.0.0.1:8000/api/events',
-    uploadAvatar: 'http://127.0.0.1:8000/api/upload-avatar/'
+    events: API_CONFIG.BASE_URL + '/events',
+    uploadAvatar: API_CONFIG.BASE_URL + '/upload-avatar/'
   };
 
   constructor(
