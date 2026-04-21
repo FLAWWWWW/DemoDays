@@ -105,7 +105,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'https://demo-days-front.vercel.app',
+    'https://demo-days-jet.vercel.app',
     'http://localhost:4200',
 ]
 

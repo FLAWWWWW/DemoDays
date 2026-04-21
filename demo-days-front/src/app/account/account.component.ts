@@ -170,7 +170,7 @@ export class AccountComponent implements OnInit {
     const confirmed = confirm('Are you sure you want to delete your account? This action cannot be undone.');
 
     if (confirmed) {
-      this.http.delete('http://127.0.0.1:8000/api/delete-account/').subscribe({
+      this.http.delete(API_CONFIG.BASE_URL + '/delete-account/').subscribe({
         next: () => {
           alert('Your account has been successfully deleted.');
           this.authService.logout();
