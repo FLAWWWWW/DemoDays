@@ -163,6 +163,14 @@ class LogoutView(APIView):
         except Exception as e:
             return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
+class DeleteAccountView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user
+        user.delete()
+        return Response({"message:" "Account is deleted"}, status=status.HTTP_204_NO_CONTENT)
+
 class SubscribeView(APIView):
     def post(self, request):
         email = request.data.get('email')

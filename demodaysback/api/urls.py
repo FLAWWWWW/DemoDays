@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import(
     TokenRefreshView,
 )
 from . import views
-from .views import LogoutView, RegisterView, CurrentUserView
+from .views import LogoutView, RegisterView, CurrentUserView, DeleteAccountView
 
 urlpatterns = [
     #Auth
@@ -15,6 +15,7 @@ urlpatterns = [
     path('user/me/', CurrentUserView.as_view(), name='user-me'),
     path('upload-avatar/', views.UploadAvatarView.as_view(), name='upload-avatar'),
     path('profile/me/', views.manage_profile, name='manage-profile'),
+    path('delete-account/', DeleteAccountView.as_view(), name='delete-account'),
     #API
     path('events/', views.event_list, name='event-list'),
     path('events/<int:pk>/', views.event_detail, name='event-detail'),
