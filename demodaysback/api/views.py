@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Event, Project, Feedback
+from .models import Event, Project, Feedback, Profile
 from .serializers import EventSerializer, ProjectSerializer, FeedbackSerializer, RegisterSerializer, EmailReceiverSerializer, UserMeSerializer
 
 @api_view(['GET', 'POST'])
@@ -122,3 +122,49 @@ class CurrentUserView(APIView):
     def get(self, request):
         serializer = UserMeSerializer(request.user)
         return Response(serializer.data)
+
+class UploadAvatarView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        avatar_file = request.FILES.get('avatar')
+
+        if not avatar_file:
+            return Response({"error": "No avatar file provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate file type
+        allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+        if avatar_file.content_type not in allowed_types:
+            return Response({"error": "Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate file size (max 5MB)
+        if avatar_file.size > 5 * 1024 * 1024:
+            return Response({"error": "File too large. Maximum size is 5MB."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create media directory if it doesn't exist
+        import os
+        from django.conf import settings
+        media_dir = os.path.join(settings.MEDIA_ROOT, 'avatars')
+        os.makedirs(media_dir, exist_ok=True)
+
+        # Generate unique filename
+        import uuid
+        file_extension = os.path.splitext(avatar_file.name)[1]
+        unique_filename = f"{uuid.uuid4()}{file_extension}"
+        file_path = os.path.join(media_dir, unique_filename)
+
+        # Save file
+        with open(file_path, 'wb+') as destination:
+            for chunk in avatar_file.chunks():
+                destination.write(chunk)
+
+        # Update user's profile image URL
+        profile, created = Profile.objects.get_or_create(user=user)
+        profile.image = f"/media/avatars/{unique_filename}"
+        profile.save()
+
+        return Response({
+            "message": "Avatar uploaded successfully",
+            "avatar_url": profile.image
+        }, status=status.HTTP_200_OK)

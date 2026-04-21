@@ -3,10 +3,11 @@ import { HomeComponent } from './home/home.component';
 import { EventComponent } from './event/event.component';
 import { AccountComponent } from './account/account.component';
 import { AboutComponent } from './about/about.component';
+import { AuthGuard } from './services/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'event/:id', component: EventComponent },
-  { path: 'account', component: AccountComponent },
+  { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
   { path: 'about', component: AboutComponent },
 ];

@@ -108,8 +108,8 @@ class EmailReceiverSerializer(serializers.ModelSerializer):
         fields = ['email']
 
 class UserMeSerializer(serializers.ModelSerializer):
-    role = serializers.CharField(source='profile.role', read_only=True)
+    profile = ProfileSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'role']
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'profile']

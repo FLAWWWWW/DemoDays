@@ -1,15 +1,17 @@
 import { Component, ChangeDetectorRef, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterModule } from '@angular/router';
 import { NgbModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormControl, Validators, FormGroup } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
+    RouterModule,
     NgbModule,
     ReactiveFormsModule,
     CommonModule,
@@ -20,7 +22,7 @@ import { CommonModule } from '@angular/common';
 })
 export class App {
   private modalService = inject(NgbModal);
-  private http = inject(HttpClient);
+  public authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
 
   isLoginMode: boolean = false;
@@ -28,14 +30,13 @@ export class App {
   submitted = false;
   errorMessage = '';
 
-  // Инициализация формы с минимальными обязательными полями
   authForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    password_confirm: new FormControl(''), // Необязательно для валидности всей формы
-    first_name: new FormControl(''),       // Необязательно
-    last_name: new FormControl(''),        // Необязательно
+    password_confirm: new FormControl(''),
+    first_name: new FormControl(''),
+    last_name: new FormControl(''),
     role: new FormControl('Guest')
   });
 
@@ -64,7 +65,6 @@ export class App {
     this.errorMessage = '';
     this.submitted = false;
 
-    // 1. Проверка базовой валидности (Email, Username, Password)
     if (!this.authForm.valid) {
       this.errorMessage = 'Please fill out email and password correctly.';
       this.cdr.detectChanges();
@@ -74,9 +74,6 @@ export class App {
     const val = this.authForm.value;
 
     if (!this.isLoginMode) {
-      // --- ЛОГИКА РЕГИСТРАЦИИ ---
-
-      // Ручная проверка полей регистрации (так как в FormGroup они необязательны)
       if (!val.first_name || !val.last_name || !val.password_confirm) {
         this.errorMessage = 'Please fill in Name, Surname and Password Confirmation.';
         this.cdr.detectChanges();
@@ -89,41 +86,44 @@ export class App {
         return;
       }
 
-      console.log('Sending Registration to Django:', val);
-
-      this.http.post('http://127.0.0.1:8000/api/register/', val).subscribe({
-        next: (res) => {
-          this.handleSuccess('Registration successful! Welcome.');
+      this.authService.register({
+        username: val.username || '',
+        email: val.email || '',
+        password: val.password || '',
+        password_confirm: val.password_confirm || '',
+        first_name: val.first_name || '',
+        last_name: val.last_name || '',
+        role: val.role || 'Guest'
+      }).subscribe({
+        next: () => {
+          this.authService.login(val.username || '', val.password || '').subscribe({
+            next: () => this.handleSuccess('Registration successful! Welcome.'),
+            error: (loginErr: any) => {
+              console.error('Auto-login failed:', loginErr);
+              this.handleSuccess('Registered! Please log in manually.');
+            }
+          });
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Server Error:', err);
-          // Вытаскиваем ошибку от Django (например, если email занят)
           const errors = err.error;
-          this.errorMessage = errors?.email ? errors.email[0] :
-            errors?.username ? errors.username[0] :
-              errors?.detail || 'Registration failed.';
+          this.errorMessage =
+            errors?.email?.[0] ||
+            errors?.username?.[0] ||
+            errors?.password?.[0] ||
+            errors?.password_confirm?.[0] ||
+            errors?.detail ||
+            'Registration failed.';
           this.cdr.detectChanges();
         }
       });
 
     } else {
-      // --- ЛОГИКА ЛОГИНА ---
-      const loginPayload = {
-        username: val.username, // или val.email, смотря как в Django настроено
-        password: val.password
-      };
-
-      console.log('Sending Login to Django:', loginPayload);
-
-      this.http.post('http://127.0.0.1:8000/api/login/', loginPayload).subscribe({
-        next: (response: any) => {
-          localStorage.setItem('access_token', response.access);
-          localStorage.setItem('refresh_token', response.refresh);
-          this.handleSuccess('Login successful! Redirecting...');
-        },
-        error: (err) => {
+      this.authService.login(val.username || '', val.password || '').subscribe({
+        next: () => this.handleSuccess('Login successful!'),
+        error: (err: any) => {
           console.error('Login Error:', err);
-          this.errorMessage = 'Invalid email/username or password.';
+          this.errorMessage = 'Invalid username or password.';
           this.cdr.detectChanges();
         }
       });
@@ -135,8 +135,6 @@ export class App {
     console.log(message);
     this.authForm.reset({ role: 'Guest' });
     this.cdr.detectChanges();
-    setTimeout(() => {
-      this.modalService.dismissAll();
-    }, 2000);
+    setTimeout(() => this.modalService.dismissAll(), 2000);
   }
 }

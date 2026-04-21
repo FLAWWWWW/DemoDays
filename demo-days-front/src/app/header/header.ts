@@ -1,25 +1,42 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
 export class Header implements OnInit {
   isLoggedIn: boolean = false;
+  currentUser: any = null;
+
+  constructor(public authService: AuthService) {}
 
   ngOnInit(): void {
-    this.checkLoginStatus();
-  }
-  checkLoginStatus(){
-    this.isLoggedIn = !!localStorage.getItem('access_token');
+    // Subscribe to auth state changes
+    this.authService.isAuthenticated$.subscribe((isAuth) => {
+      this.isLoggedIn = isAuth;
+    });
+
+    // Subscribe to current user changes
+    this.authService.currentUser$.subscribe((user) => {
+      this.currentUser = user;
+    });
   }
 
-  logout(){
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    this.isLoggedIn = false;
-    // тута можно сделать редирект на главную
+  logout(): void {
+    this.authService.logout();
+  }
+
+  getAvatarUrl(): string {
+    if (this.currentUser?.profile?.image) {
+      return this.currentUser.profile.image;
+    }
+    return 'assets/default-avatar.png';
   }
 }
+

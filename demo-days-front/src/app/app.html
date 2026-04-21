@@ -116,11 +116,29 @@
             </ul>
           </div>
 
-          <button (click)="openAuthModal(authModal)" class="btn btn-outline-light fw-bold ms-3 px-4" style="border-radius: 20px;">
+          <ng-container *ngIf="authService.isAuthenticated$ | async; else signInBtn">
+  <div class="d-flex align-items-center gap-3">
+    <a routerLink="/account" class="text-white text-decoration-none">
+      <ng-container *ngIf="(authService.currentUser$ | async)?.profile?.image; else defaultIcon">
+        <img [src]="(authService.currentUser$ | async)?.profile?.image"
+             alt="Avatar"
+             class="rounded-circle"
+             style="width: 40px; height: 40px; object-fit: cover;">
+              </ng-container>
+              <ng-template #defaultIcon>
+                <i class="bi bi-person-circle fs-2"></i>
+              </ng-template>
+            </a>
+          </div>
+        </ng-container>
+
+        <ng-template #signInBtn>
+          <button (click)="openAuthModal(authModal)"
+                  class="btn btn-outline-light fw-bold ms-3 px-4"
+                  style="border-radius: 20px;">
             Sign In
           </button>
-
-          <i class="bi bi-person-circle fs-2 ms-3"></i>
+        </ng-template>
         </div>
       </div>
     </nav>

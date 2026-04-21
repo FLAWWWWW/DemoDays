@@ -10,10 +10,20 @@
 
   <div class="p-4 mb-5" style="background-color: #c5c6e0; border-radius: 12px; color: #333;">
     <div class="d-flex align-items-center mb-4">
-      <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-        <i class="bi bi-person-fill text-white fs-1"></i>
+      <ng-container *ngIf="currentUser?.profile?.image; else defaultAvatar">
+        <img [src]="currentUser.profile.image" alt="Avatar" class="rounded-circle"
+            style="width: 80px; height: 80px; object-fit: cover;">
+      </ng-container>
+      <ng-template #defaultAvatar>
+        <i class="bi bi-person-circle text-secondary" style="font-size: 80px;"></i>
+      </ng-template>
+      <div class="ms-3">
+        <input type="file" id="avatarInput" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+        <label for="avatarInput" class="btn btn-light btn-sm border shadow-sm fw-bold" style="color: #333; cursor: pointer;" [class.disabled]="isUploading">
+          <span *ngIf="isUploading">Uploading...</span>
+          <span *ngIf="!isUploading">Load Avatar</span>
+        </label>
       </div>
-      <button class="btn btn-light btn-sm ms-3 border shadow-sm fw-bold" style="color: #333;">Load Avatar</button>
     </div>
 
     <form [formGroup]="profileForm">
