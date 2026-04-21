@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, Project, Profile, Feedback, EmailReceiver
+from .models import Event, Project, Profile, Feedback, EmailReceiver, TeamMember
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
@@ -50,13 +50,19 @@ class FeedbackSerializer(serializers.Serializer):
         instance.rating = validated_data.get('rating', instance.rating)
         instance.save()
         return instance
-    
+
+class TeamMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeamMember
+        fields = ['id', 'first_name', 'last_name']
+
 class ProjectSerializer(serializers.ModelSerializer):
     owner = serializers.StringRelatedField(read_only=True)
-
+    members = TeamMemberSerializer(many=True, read_only=True)
+    
     class Meta:
         model = Project
-        fields = ['id', 'title', 'description', 'owner', 'event', 'created_at']
+        fields = ['id', 'title', 'members']
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)

@@ -31,12 +31,18 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='projects')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    image = models.CharField(max_length=255) 
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='projects')
     
     def __str__(self):
         return self.title
+
+class TeamMember(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='members')
+
+    def __str__(self):
+        return f"{self.name - self.project_name}"
 
 class Feedback(models.Model):
     text = models.TextField()
