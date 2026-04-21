@@ -72,11 +72,26 @@ class ProjectList(APIView):
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
     
-    def post(self,request):
-        serializer = ProjectSerializer(data=request.data)
+    def post(self, request):
+        data = request.data.copy()
+        
+        if 'event' not in data or not data['event']:
+            from .models import Event
+            latest_event = Event.objects.first()
+            if latest_event:
+                data['event'] = latest_event.id
+            else:
+                # ВАЖНО: возвращаем Response даже если ошибка
+                return Response({"error": "No events found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        print("DEBUG667: ", request.data)
+
+        serializer = ProjectSerializer(data=data)
         if serializer.is_valid():
-            serializer.save(owner=request.user)
+            serializer.save(owner=request.user.profile)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        print("DEBUG667SNIZU: ", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])

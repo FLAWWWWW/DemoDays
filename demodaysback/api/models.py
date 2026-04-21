@@ -42,7 +42,7 @@ class TeamMember(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='members')
 
     def __str__(self):
-        return f"{self.name - self.project_name}"
+        return f"{self.first_name} {self.last_name} - {self.project.title}"
 
 class Feedback(models.Model):
     text = models.TextField()

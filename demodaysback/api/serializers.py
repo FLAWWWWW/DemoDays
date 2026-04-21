@@ -66,15 +66,43 @@ class FeedbackSerializer(serializers.Serializer):
 class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamMember
-        fields = ['id', 'first_name', 'last_name']
+        fields = ['first_name', 'last_name']
 
 class ProjectSerializer(serializers.ModelSerializer):
+    members = TeamMemberSerializer(many=True, required=False)
+    event = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all())
     owner = serializers.StringRelatedField(read_only=True)
-    members = TeamMemberSerializer(many=True, read_only=True)
-    
+
     class Meta:
         model = Project
-        fields = ['id', 'title', 'members']
+        fields = ['id', 'title', 'description', 'event', 'owner', 'members']
+
+    def create(self, validated_data):
+        members_data = validated_data.pop('members', [])
+        
+        if 'event' not in validated_data:
+             raise serializers.ValidationError({"event": "Это поле не попало в обработку. Проверьте class Meta."})
+
+        project = Project.objects.create(**validated_data)
+        
+        for member_data in members_data:
+            TeamMember.objects.create(project=project, **member_data)
+            
+        return project
+    
+    def update(self, instance, validated_data):
+        members_data = validated_data.pop('members', None)
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.event = validated_data.get('event', instance.event)
+        instance.save()
+
+        if members_data is not None:
+            instance.members.all().delete()
+            for m_data in members_data:
+                TeamMember.objects.create(project=instance, **m_data)
+    
+        return instance
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
