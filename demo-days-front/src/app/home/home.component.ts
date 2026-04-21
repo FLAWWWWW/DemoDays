@@ -14,7 +14,7 @@ import { RouterModule } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   events: any[] = [];
-  currentIndex = 0;  // ← добавить
+  currentIndex = 0;
 
   constructor(private homeService: Home, private cdr: ChangeDetectorRef) {}
 
@@ -25,11 +25,9 @@ export class HomeComponent implements OnInit {
         this.currentIndex = 0;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Ошибка загрузки событий', err)
+      error: (err) => console.error('Error', err)
     });
   }
-
-  // ← добавить эти три метода
   next() {
     this.currentIndex = (this.currentIndex + 1) % this.events.length;
   }

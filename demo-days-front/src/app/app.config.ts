@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import {
   provideHttpClient,
   withInterceptorsFromDi,
-  withFetch  // <-- добавь это
+  withFetch
 } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { routes } from './app.routes';
@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(
-      withFetch(),               // <-- fix SSR: нужен для Angular SSR
+      withFetch(),
       withInterceptorsFromDi()
     ),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

@@ -9,12 +9,11 @@
   </div>
 
   <div *ngIf="event && !loading">
-    <!-- Шапка ивента -->
     <section id="about" class="py-5">
       <div class="container text-center">
-        <div class="rounded-4 mx-auto mb-4 shadow overflow-hidden" 
+        <div class="rounded-4 mx-auto mb-4 shadow overflow-hidden"
              style="max-width: 800px; height: 350px; background: #25254d;">
-          <img *ngIf="event.image" [src]="event.image" 
+          <img *ngIf="event.image" [src]="event.image"
                class="w-100 h-100" style="object-fit: cover;" [alt]="event.title">
         </div>
         <h1 class="fw-bold mb-2">{{ event.title }}</h1>
@@ -27,7 +26,6 @@
 
     <hr class="section-divider">
 
-    <!-- Presentations — статично пока нет данных -->
     <section id="presentations" class="py-5">
       <div class="container">
         <h2 class="text-center text-white mb-5 display-5 fw-bold">Presentations</h2>
@@ -39,7 +37,6 @@
 
     <hr class="section-divider">
 
-    <!-- Location -->
     <section id="location" class="py-5">
       <div class="container text-center text-white">
         <h2 class="mb-5 display-5 fw-bold">Location</h2>

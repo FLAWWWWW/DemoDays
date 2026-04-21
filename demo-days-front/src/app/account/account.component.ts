@@ -19,7 +19,6 @@ export class AccountComponent implements OnInit {
   selectedFile: File | null = null;
   isUploading: boolean = false;
 
-  // API эндпоинты
   private readonly API_URLS = {
     events: 'http://127.0.0.1:8000/api/events',
     uploadAvatar: 'http://127.0.0.1:8000/api/upload-avatar/'
@@ -32,7 +31,6 @@ export class AccountComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  // 1. Форма профиля пользователя
   profileForm = new FormGroup({
     name: new FormControl(''),
     surname: new FormControl(''),
@@ -42,7 +40,6 @@ export class AccountComponent implements OnInit {
     role: new FormControl('Guest')
   });
 
-  // 2. Форма создания презентации (с динамическим списком участников)
   presentationForm = new FormGroup({
     eventId: new FormControl('', [Validators.required]),
     presentationName: new FormControl('', [Validators.required]),
@@ -50,7 +47,6 @@ export class AccountComponent implements OnInit {
     participants: new FormArray([])
   });
 
-  // 3. Форма смены пароля
   passwordForm = new FormGroup({
     oldPassword: new FormControl('', [Validators.required]),
     newPassword: new FormControl('', [Validators.required, Validators.minLength(6)])
@@ -61,7 +57,6 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Подписка на текущего пользователя для автозаполнения профиля
     this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
       if (user) {
@@ -81,19 +76,15 @@ export class AccountComponent implements OnInit {
       }
     });
 
-    // Загрузка доступных ивентов для селекта
     this.loadEventsFromDjango();
 
-    // Инициализация первой строки участников
     this.syncParticipants(1);
 
-    // Подписка на изменение числа участников для мгновенного создания полей
     this.presentationForm.get('participantCount')?.valueChanges.subscribe(value => {
       this.syncParticipants(value);
     });
   }
 
-  // Создание группы полей для одного участника
   createParticipantGroup(): FormGroup {
     return new FormGroup({
       firstName: new FormControl('', [Validators.required]),
@@ -101,7 +92,6 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  // Мгновенная синхронизация FormArray с введенным числом
   syncParticipants(count: any) {
     const targetCount = Math.max(1, parseInt(count, 10) || 1);
 
@@ -112,7 +102,7 @@ export class AccountComponent implements OnInit {
         this.participants.removeAt(this.participants.length - 1);
       }
     }
-    this.cdr.detectChanges(); // Гарантируем обновление DOM
+    this.cdr.detectChanges();
   }
 
   loadEventsFromDjango(): void {
@@ -125,7 +115,6 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  // Загрузка аватара
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -149,7 +138,7 @@ export class AccountComponent implements OnInit {
           this.currentUser.profile.image = response.avatar_url;
           this.currentUser = { ...this.currentUser };
         }
-        this.authService.fetchCurrentUser(); // Обновляем состояние в сервисе
+        this.authService.fetchCurrentUser();
       },
       error: (error) => {
         this.isUploading = false;
@@ -163,13 +152,10 @@ export class AccountComponent implements OnInit {
     return this.currentUser?.profile?.image || 'assets/default-avatar.png';
   }
 
-  // Отправка формы презентации в Django
   onSubmitPresentation(): void {
     if (this.presentationForm.valid) {
       const payload = this.presentationForm.getRawValue();
       console.log('Sending presentation data to backend:', payload);
-
-      // Пример: this.http.post('...', payload).subscribe(...);
     }
   }
 
@@ -183,8 +169,6 @@ export class AccountComponent implements OnInit {
     const confirmed = confirm('Are you sure you want to delete your account? This action cannot be undone.');
 
     if (confirmed) {
-      // 2. Отправляем запрос на бэкенд
-      // Убедись, что в Django этот эндпоинт настроен (например, /api/delete-account/)
       this.http.delete('http://127.0.0.1:8000/api/delete-account/').subscribe({
         next: () => {
           alert('Your account has been successfully deleted.');

@@ -1,4 +1,3 @@
-/* Основные цвета макета */
 :host {
   --main-blue: #00aeef;
   --dark-bg: #1a1a2e;
@@ -7,7 +6,6 @@
   --footer-purple: #6b6b99;
 }
 
-/* Навбар-капсула */
 .navbar-custom {
   background-color: var(--main-blue);
   border-radius: 8px;
@@ -76,25 +74,20 @@ body {
   padding: 8px 0 !important;
   transition: all 0.2s ease;
 }
-
 ::ng-deep .dropdown-item:hover {
   background-color: #00aeef !important;
   color: white !important;
   cursor: pointer;
 }
-
-
-
 .btn-group .btn-outline-primary {
   color: #008bff !important;
 }
-
 .btn-group .btn-primary,
 .btn-group .btn-primary:hover,
 .btn-group .btn-primary:active,
 .btn-group .btn-primary:focus {
   color: #ffffff !important;
-  background-color: #007bff !important; /* Твой основной синий */
+  background-color: #007bff !important;
   border-color: #007bff !important;
 }
 .btn-group .btn-outline-primary:hover {

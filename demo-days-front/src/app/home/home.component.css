@@ -48,11 +48,10 @@
   word-break: break-word;
   max-height: calc(1.5em * 12);
 }
-/* Контейнер кнопки (круг с тонкой белой рамкой) */
 .arrow-container {
   background: transparent;
-  border: 1.5px solid #ffffff; /* Четкая, не полупрозрачная рамка */
-  width: 35px; /* Размер круга */
+  border: 1.5px solid #ffffff;
+  width: 35px;
   height: 35px;
   border-radius: 50%;
   display: flex;
@@ -63,30 +62,27 @@
   transition: all 0.3s ease;
 }
 
-/* Эффект при наведении (легкий фон) */
+
 .arrow-container:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Сама стрелка (уголок) */
 .custom-arrow {
-  border: solid #ffffff; /* Чисто белый цвет */
-  border-width: 0 2.5px 2.5px 0; /* Толщина линий уголка */
+  border: solid #ffffff;
+  border-width: 0 2.5px 2.5px 0;
   display: inline-block;
-  padding: 4.5px; /* Размер уголка */
-  border-radius: 2px; /* !!! Скругляем края, чтобы было как на фото !!! */
+  padding: 4.5px;
+  border-radius: 2px;
 }
 
-/* Поворот для стрелки ВПЕРЕД */
 .right {
   transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
-  margin-right: 2px; /* Небольшая коррекция для центровки */
+  margin-right: 2px;
 }
 
-/* Поворот для стрелки НАЗАД */
 .left {
   transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
-  margin-left: 2px; /* Небольшая коррекция для центровки */
+  margin-left: 2px;
 }

@@ -14,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Читаем токен напрямую из localStorage, без AuthService
+
     let token: string | null = null;
     if (isPlatformBrowser(this.platformId)) {
       token = localStorage.getItem('access_token');
