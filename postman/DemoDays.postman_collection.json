@@ -1,19 +1,43 @@
 {
-  "info": {
-    "_postman_id": "9824dba3-2c15-45fc-a072-a8139c2ef610",
-    "name": "DemoDays",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "54168004",
-    "_collection_link": "https://go.postman.co/collection/54168004-9824dba3-2c15-45fc-a072-a8139c2ef610?source=collection_link"
-  },
-  "item": [
-    {
-      "name": "Fetching Users Data",
-      "request": {
-        "method": "GET",
-        "header": []
-      },
-      "response": []
-    }
-  ]
+    "info": {
+        "name": "DemoDays API",
+        "description": "API для управления студенческими проектами",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Get Auth Token",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "url": {"raw": "http://127.0.0.1:8000/api/token/", "host": ["127", "0", "0", "1"], "port": "8000", "path": ["api", "token", ""]},
+                "body": {"mode": "raw", "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}", "options": {"raw": {"language": "json"}}}
+            }
+        },
+        {
+            "name": "Create Project",
+            "request": {
+                "method": "POST",
+                "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+                "url": {"raw": "http://127.0.0.1:8000/api/projects/", "host": ["127", "0", "0", "1"], "port": "8000", "path": ["api", "projects", ""]},
+                "body": {"mode": "raw", "raw": "{\n    \"title\": \"DemoDays App\",\n    \"description\": \"Fullstack IT Project\",\n    \"event\": 1,\n    \"members\": [{\"name\": \"Student1\", \"role\": \"Frontend\"}]\n}", "options": {"raw": {"language": "json"}}}
+            }
+        },
+        {
+            "name": "Get Projects",
+            "request": {
+                "method": "GET",
+                "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+                "url": {"raw": "http://127.0.0.1:8000/api/projects/", "host": ["127", "0", "0", "1"], "port": "8000", "path": ["api", "projects", ""]}
+            }
+        },
+        {
+            "name": "Delete Account",
+            "request": {
+                "method": "DELETE",
+                "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+                "url": {"raw": "http://127.0.0.1:8000/api/delete-account/", "host": ["127", "0", "0", "1"], "port": "8000", "path": ["api", "delete-account", ""]}
+            }
+        }
+    ]
 }
