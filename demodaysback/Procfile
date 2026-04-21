@@ -1,2 +1,2 @@
-web: gunicorn demodaysback.wsgi
-release: python manage.py migrate && python manage.py collectstatic --noinput && python manage.py createsuperuser --noinput || true
+web: python manage.py collectstatic --noinput && gunicorn demodaysback.wsgi
+release: python manage.py migrate && python manage.py createsuperuser --noinput || true
