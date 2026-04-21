@@ -12,6 +12,7 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -104,7 +105,8 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
+    'https://demo-days-front.vercel.app',
+    'http://localhost:4200',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
