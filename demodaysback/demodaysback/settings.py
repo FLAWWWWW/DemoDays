@@ -104,7 +104,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'https://demo-days-jet.vercel.app',
+    'https://demo-days-jet.vercel.app/',
     'http://localhost:4200',
 ]
 CORS_ALLOW_ALL_ORIGINS = True
@@ -112,5 +112,5 @@ CORS_ALLOW_ALL_ORIGINS = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://demodays-production.up.railway.app',
+    'https://demodays-production.up.railway.app/',
 ]
