@@ -4,7 +4,7 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-BASE_URL: 'https://your-actual-backend.up.railway.app/api'
+BASE_URL = 'https://your-actual-backend.up.railway.app/api'
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-10xbf5*lp9#4c@@z6$yv*d08!84tbc1zi!_d5mt0h2d556&t0d')
 
@@ -108,5 +108,6 @@ CORS_ALLOWED_ORIGINS = [
     'https://demo-days-jet.vercel.app',
     'http://localhost:4200',
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
